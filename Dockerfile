@@ -1,5 +1,8 @@
 FROM tiangolo/uvicorn-gunicorn:python3.8-slim 
 
+
+RUN pip install joblib scikit-learn
+
 COPY ./model /model
 COPY ./app /app
 ENV PORT 8080
