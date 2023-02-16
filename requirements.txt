@@ -14,3 +14,5 @@ pandas
 xgboost
 sklearn
 pickle5
+fastapi
+uvicorn
