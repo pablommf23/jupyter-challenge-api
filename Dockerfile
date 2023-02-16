@@ -1,11 +1,13 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
+FROM tiangolo/uvicorn-gunicorn:python3.8-slim 
 
-WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive
 
-COPY ./app /app
+ENV MODULE_NAME=app 
 
-RUN pip install fastapi uvicorn
+ADD requirements.txt . 
 
+RUN pip install -r requirements.txt \    
+    && rm -rf /root/.cache 
 
 EXPOSE 8000
 
