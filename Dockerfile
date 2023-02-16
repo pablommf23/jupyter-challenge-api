@@ -1,13 +1,7 @@
 FROM tiangolo/uvicorn-gunicorn:python3.8-slim 
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-ENV MODULE_NAME=app 
-
-ADD requirements.txt . 
-
-RUN pip install -r requirements.txt \    
-    && rm -rf /root/.cache 
+COPY ./model /model
+COPY ./app /app
 
 EXPOSE 8000
 
