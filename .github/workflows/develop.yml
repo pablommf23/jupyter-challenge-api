@@ -1,0 +1,59 @@
+name: development
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    name: Deploy to Development Environment
+    environment: development  
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: cancel previous runs
+      uses: styfle/cancel-workflow-action@0.5.0
+      with:
+        access_token: ${{ github.token }}
+
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: Authenticate to Google Cloud
+      id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+        #UPDATE THIS TO WORKLOAD IDENTITIES
+
+    - name: Login to Amazon GCR
+      id: login-GCR
+      uses: aws-actions/amazon-GCR-login@v1
+
+    - name: Build, tag, and push image to Amazon GCR
+      id: build-image
+      env:
+        SERVICE_NAME: ${{ steps.login-GCR.outputs.registry }}
+        GCR_REGISTRY: api-development
+        PROJECT_ID: latam-challenge
+      run: |
+        docker build --build-arg -t us.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .   
+        gcloud auth configure-docker -q
+        docker push $GCR_REGISTRY/$GCR_REPOSITORY --all-tags
+
+    # - name: Deploy
+    #   env:
+    #     ECS_CLUSTER: api-development
+    #     ECS_SERVICE: api-development-service
+    #     ECS_TASK_DEFINITION: api-development
+    #   run: |
+
+
+    # - name: Notification
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     job_name: Deploy to Develop
+    #     status: ${{ job.status }}
+    #     fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ sGCRets.SLACK_WEBHOOK_URL }}
+    #   if: always()
