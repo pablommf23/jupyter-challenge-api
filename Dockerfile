@@ -17,4 +17,4 @@ ENV PORT 8080
 
 ENV PYTHONUNBUFFERED True
 
-CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT} --workers 1
+ENTRYPOINT ["uvicorn", "main:app", "--port=${PORT}", "--host", "0.0.0.0"]
