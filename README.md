@@ -2,8 +2,7 @@
 
 Since serialized model was provided and Python solutions are prefered on 2 applications to put the model in a RESTful endpoint /predict: Scikit-Learn and FastAPI. Uvicorn brings an easy web server
 
-# Docker image 
- Dock
+
 
 # GKE deployment
 
